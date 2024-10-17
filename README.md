@@ -7,11 +7,13 @@ _KST/BDATS: Datové struktury, Univerzita Pardubice - Fakulta Elektrotechniky a 
 ____
 
 **A)** Motivační příklad:
+
 V rámci personální agendy jsou uchovávány statistické informace o počtu obyvatel
 (muži/ženy) pro jednotlivé obce, přičemž jsou obce logicky organizovány do jednotlivých
 krajů. Finální implementace bude realizována jako pole abstraktních lineárních seznamů.
 
 **B)** Použité datové struktury:
+
 V rámci modulu ABSTRDOUBLELIST implementujte abstraktní datovou strukturu (ADS)
 obousměrně cyklicky zřetězený lineární seznam v dynamické paměti (stylizovaně
 znázorněný v rámci obr. 1). Tato třída implementuje rozhraní IAbstrDoubleList,
@@ -51,7 +53,9 @@ fixovat tak reference na jednotlivé obce v kraji, viz obr 2.
 
 ![obrazek](https://github.com/user-attachments/assets/9c310ae8-131b-455d-92e7-772ff43eb8c2)
 
-**C)** Pro ověření funkčnosti implementovaných ADS vytvořte modul Obyvatele. Tento modul
+**C)** Ověření funčnosti:
+
+Pro ověření funkčnosti implementovaných ADS vytvořte modul Obyvatele. Tento modul
 umožnuje správu seznamů obcí a implementuje následující rozhraní:
 int importData(String soubor) – provede import dat z datového souboru
 kraje.csv, kde číslo kraje odpovídá indexu pole-1. Návratová hodnota přestavuje počet
@@ -86,13 +90,15 @@ kraje rovna null, pak zruší všechny obce.
 ![obrazek](https://github.com/user-attachments/assets/8504e73c-01a1-43e6-9127-3d9a6c5bcabb)
 
 Modul Obec pracuje s typem
-• PSC
-• Obec
-• Počet mužů
-• Počet žen
-• celkem
+  - PSC
+  - Obec
+  - Počet mužů
+  - Počet žen
+  - celkem
 
-**D)** Pro obsluhu aplikace vytvořte uživatelské formulářové rozhraní ProgObyvatele, které
+**D)** GUI:
+
+Pro obsluhu aplikace vytvořte uživatelské formulářové rozhraní ProgObyvatele, které
 umožňuje obsluhu programu a volat požadované operace.
 Zmíněný program, nechť umožňuje zadávání vstupních dat z klávesnice, ze souboru a
 z generátoru, výstupy z programu nechť je možné zobrazit na obrazovce a uložit do souboru.
