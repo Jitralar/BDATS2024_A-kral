@@ -52,16 +52,86 @@ public class ProgObyvatele {
             kraje.get(i).displayObce(); // Display obce in the specific region
             System.out.println();
         }
+
+        if (kraje.isEmpty()) {
+            System.out.println("No data found.");
+        }
     }
 
     // Display average population for a specific region (Kraj)
     public void displayAveragePopulationForKraj(int index) {
         if (index >= 0 && index < kraje.size()) {
             System.out.println("Average population for Kraj " + (index + 1) + ": " + kraje.get(index).getAveragePopulation());
+        } else if (kraje.isEmpty()) {
+            System.out.println("No data in system.");
         } else {
             System.out.println("Invalid Kraj index.");
         }
     }
+
+
+    // Manual mode to showcase data one by one with circular navigation
+    public void manualMode(Scanner scanner) {
+        if (kraje.isEmpty()) {
+            System.out.println("No data available. Please import data first.");
+            return;
+        }
+
+        // Flatten the list of all municipalities (Obce) from all regions (Kraje)
+        List<Obec> allObce = new ArrayList<>();
+        for (Kraj kraj : kraje) {
+            for (Obec obec : kraj.getObce()) {  // Iterate through the DoubleLinkedList
+                allObce.add(obec);  // Add each Obec to the ArrayList
+            }
+        }
+
+        if (allObce.isEmpty()) {
+            System.out.println("No municipalities (Obce) to display.");
+            return;
+        }
+
+        int currentIndex = 0;  // Start with the first element
+        while (true) {
+            System.out.println("\nCurrently viewing Obec " + (currentIndex + 1) + " of " + allObce.size() + ":");
+            System.out.println(allObce.get(currentIndex));  // Show current Obec
+
+            System.out.println("Options: [n]ext, [b]ack, [d]elete, [q]uit");
+            System.out.print("Enter your choice: ");
+            String choice = scanner.nextLine().trim().toLowerCase();
+
+            switch (choice) {
+                case "n":  // Next
+                    currentIndex = (currentIndex + 1) % allObce.size();  // Circular forward navigation
+                    break;
+
+                case "b":  // Back
+                    currentIndex = (currentIndex - 1 + allObce.size()) % allObce.size();  // Circular backward navigation
+                    break;
+
+                case "d":  // Delete
+                    System.out.println("Deleting Obec: " + allObce.get(currentIndex));
+                    allObce.remove(currentIndex);
+                    if (allObce.isEmpty()) {
+                        System.out.println("No more Obce left.");
+                        return;
+                    }
+                    // Adjust index to stay within bounds after deletion
+                    if (currentIndex >= allObce.size()) {
+                        currentIndex = 0;  // Go back to the first item if we delete the last one
+                    }
+                    break;
+
+                case "q":  // Quit
+                    return;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+        }
+    }
+
+
 
     // Main method to run the program
     public static void main(String[] args) {
@@ -74,7 +144,8 @@ public class ProgObyvatele {
             System.out.println("1. Import data from file");
             System.out.println("2. Display all municipalities");
             System.out.println("3. Display average population for a specific region (kraj)");
-            System.out.println("4. Exit");
+            System.out.println("4. Manual mode (showcase data one by one)");
+            System.out.println("5. Exit");
             System.out.print("Enter your choice: ");
 
             int choice = scanner.nextInt();
@@ -99,6 +170,10 @@ public class ProgObyvatele {
                     break;
 
                 case 4:
+                    program.manualMode(scanner);  // Start manual mode
+                    break;
+
+                case 5:
                     running = false;
                     break;
 
