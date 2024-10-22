@@ -20,29 +20,32 @@ znázorněný v rámci obr. 1). Tato třída implementuje rozhraní IAbstrDouble
 které implementuje implicitní rozhraní Iterable. Rozhraní IAbstrDoubleList je
 definováno následovně:
 
-void zrus()-zrušení celého seznamu,
-boolean jePrazdny()-test naplněnosti seznamu,
-void vlozPrvni(T data)-vložení prvku do seznamu na první místo
-void vlozPosledni(T data)-vložení prvku do seznamu na poslední místo,
-void vlozNaslednika(T data)-vložení prvku do seznamu jakožto následníka
+1) základní ovládání
+- void zrus()-zrušení celého seznamu,
+- boolean jePrazdny()-test naplněnosti seznamu,
+- void vlozPrvni(T data)-vložení prvku do seznamu na první místo
+- void vlozPosledni(T data)-vložení prvku do seznamu na poslední místo,
+- void vlozNaslednika(T data)-vložení prvku do seznamu jakožto následníka
 aktuálního prvku,
-void vlozPredchudce(T data)-vložení prvku do seznamu jakožto předchůdce
+- void vlozPredchudce(T data)-vložení prvku do seznamu jakožto předchůdce
 aktuálního prvku,
 
-T zpristupniAktualni()-zpřístupnění aktuálního prvku seznamu,
-T zpristupniPrvni()-zpřístupnění prvního prvku seznamu,
-T zpristupniPosledni()-zpřístupnění posledního prvku seznamu,
-T zpristupniNaslednika()-zpřístupnění následníka aktuálního prvku,
-T zpristupniPredchudce()-zpřístupnění předchůdce aktuálního prvku,
+2) zpřístupnění seznamu
+- T zpristupniAktualni()-zpřístupnění aktuálního prvku seznamu,
+- T zpristupniPrvni()-zpřístupnění prvního prvku seznamu,
+- T zpristupniPosledni()-zpřístupnění posledního prvku seznamu,
+- T zpristupniNaslednika()-zpřístupnění následníka aktuálního prvku,
+- T zpristupniPredchudce()-zpřístupnění předchůdce aktuálního prvku,
 Pozn. Operace typu zpřístupni, přenastavují pozici aktuálního prvku
 
-T odeberAktualni()-odebrání (vyjmutí) aktuálního prvku ze seznamu poté je
+3) odebírání prvků
+- T odeberAktualni()-odebrání (vyjmutí) aktuálního prvku ze seznamu poté je
 aktuální prvek nastaven na první prvek
-T odeberPrvni()-odebrání prvního prvku ze seznamu,
-T odeberPosledni()-odebrání posledního prvku ze seznamu,
-T odeberNaslednika()-odebrání následníka aktuálního prvku ze seznamu,
-T odeberPredchudce()-odebrání předchůdce aktuálního prvku ze seznamu,
-Iterator<T> iterator() -vytvoří iterátor (dle rozhraní Iterable)
+- T odeberPrvni()-odebrání prvního prvku ze seznamu,
+- T odeberPosledni()-odebrání posledního prvku ze seznamu,
+- T odeberNaslednika()-odebrání následníka aktuálního prvku ze seznamu,
+- T odeberPredchudce()-odebrání předchůdce aktuálního prvku ze seznamu,
+- Iterator<T> iterator() -vytvoří iterátor (dle rozhraní Iterable)
 
 
 ![obrazek](https://github.com/user-attachments/assets/0cbc4e7f-ac53-4532-a7b8-52b027828316)
@@ -57,34 +60,37 @@ fixovat tak reference na jednotlivé obce v kraji, viz obr 2.
 
 Pro ověření funkčnosti implementovaných ADS vytvořte modul Obyvatele. Tento modul
 umožnuje správu seznamů obcí a implementuje následující rozhraní:
-int importData(String soubor) – provede import dat z datového souboru
+
+
+• int importData(String soubor) – provede import dat z datového souboru
 kraje.csv, kde číslo kraje odpovídá indexu pole-1. Návratová hodnota přestavuje počet
 úspěšně načtených záznamů.
 
-void vlozObec(Obec obec, enumPozice pozice, enumKraj kraj) -
+
+• void vlozObec(Obec obec, enumPozice pozice, enumKraj kraj) -
 vloží novou obec do seznamu obcí na příslušnou pozici (první, poslední, předchůdce,
 následník), v odpovídajícím kraji
 
-Obec zpristupniObec(enumPozice pozice, enumKraj Kraj) -
+• Obec zpristupniObec(enumPozice pozice, enumKraj Kraj) -
 zpřístupní obec z požadované pozice (první, poslední, předchůdce, následník, aktuální),
 v odpovídajícím kraji
 
-Obec odeberObec(enumPozice pozice, enumKraj Kraj) - odebere
+• Obec odeberObec(enumPozice pozice, enumKraj Kraj) - odebere
 obec z požadované pozice (první, poslední, předchůdce, následník, aktuální),
 v odpovídajícím kraji
 
-float zjistiPrumer(enumKraj Kraj) – zjistí průměrný počet obyvatel
+• float zjistiPrumer(enumKraj Kraj) – zjistí průměrný počet obyvatel
 v kraji, pokud je hodnota kraje rovna null, pak je průměr spočítán pro všechny kraje.
-Obec[]zobrazObce(enumKraj Kraj) – pomocí iterátoru provede výpis obcí
+• Obec[]zobrazObce(enumKraj Kraj) – pomocí iterátoru provede výpis obcí
 v daném kraji, pokud je hodnota kraje rovna null, pak jsou vypsány všechny kraje.
 Alternativně může metoda vracet IAbstrDoubleList
 
-Obec[]zobrazObceNadPrumer(enumKraj Kraj) – pomocí iterátoru provede
+• Obec[]zobrazObceNadPrumer(enumKraj Kraj) – pomocí iterátoru provede
 výpis obcí, které mají v daném kraji nadprůměrný počet obyvatel. Pokud je hodnota kraje
 rovna null, pak je průměr spočítán pro všechny kraje. Alternativně může metoda vracet
 IAbstrDoubleList
 
-void zrus(enumKraj Kraj) – zruší všechny obce v kraji. Pokud je hodnota
+• void zrus(enumKraj Kraj) – zruší všechny obce v kraji. Pokud je hodnota
 kraje rovna null, pak zruší všechny obce.
 
 ![obrazek](https://github.com/user-attachments/assets/8504e73c-01a1-43e6-9127-3d9a6c5bcabb)
