@@ -18,11 +18,22 @@ public class DoubleLinkedList<T> implements Iterable<T> {
         }
     }
 
-    public void addFirst(T data) {
+    // Základní ovládání (Basic operations)
+
+    public void zrus() {
+        head = tail = current = null;
+        size = 0;
+    }
+
+    public boolean jePrazdny() {
+        return size == 0;
+    }
+
+    public void vlozPrvni(T data) {
         Node<T> newNode = new Node<>(data);
         if (head == null) {
             head = tail = newNode;
-            head.next = head.prev = newNode; // Circular reference
+            head.next = head.prev = newNode;
         } else {
             newNode.next = head;
             newNode.prev = tail;
@@ -33,11 +44,11 @@ public class DoubleLinkedList<T> implements Iterable<T> {
         size++;
     }
 
-    public void addLast(T data) {
-        Node<T> newNode = new Node<>(data);
+    public void vlozPosledni(T data) {
         if (tail == null) {
-            addFirst(data); // If empty, use addFirst
+            vlozPrvni(data);
         } else {
+            Node<T> newNode = new Node<>(data);
             newNode.prev = tail;
             newNode.next = head;
             tail.next = newNode;
@@ -47,57 +58,111 @@ public class DoubleLinkedList<T> implements Iterable<T> {
         }
     }
 
-    public T removeFirst() {
-        if (head == null) throw new NoSuchElementException("List is empty.");
+    public void vlozNaslednika(T data) {
+        if (current == null) throw new NoSuchElementException("Aktuální prvek není nastaven.");
+        Node<T> newNode = new Node<>(data);
+        newNode.next = current.next;
+        newNode.prev = current;
+        current.next.prev = newNode;
+        current.next = newNode;
+        if (current == tail) tail = newNode;
+        size++;
+    }
+
+    public void vlozPredchudce(T data) {
+        if (current == null) throw new NoSuchElementException("Aktuální prvek není nastaven.");
+        Node<T> newNode = new Node<>(data);
+        newNode.next = current;
+        newNode.prev = current.prev;
+        current.prev.next = newNode;
+        current.prev = newNode;
+        if (current == head) head = newNode;
+        size++;
+    }
+
+    // Zpřístupnění seznamu (Accessing list elements)
+
+    public T zpristupniAktualni() {
+        if (current == null) throw new NoSuchElementException("Aktuální prvek není nastaven.");
+        return current.data;
+    }
+
+    public T zpristupniPrvni() {
+        if (head == null) throw new NoSuchElementException("Seznam je prázdný.");
+        current = head;
+        return current.data;
+    }
+
+    public T zpristupniPosledni() {
+        if (tail == null) throw new NoSuchElementException("Seznam je prázdný.");
+        current = tail;
+        return current.data;
+    }
+
+    public T zpristupniNaslednika() {
+        if (current == null || current.next == head) throw new NoSuchElementException("Následník neexistuje.");
+        current = current.next;
+        return current.data;
+    }
+
+    public T zpristupniPredchudce() {
+        if (current == null || current.prev == tail) throw new NoSuchElementException("Předchůdce neexistuje.");
+        current = current.prev;
+        return current.data;
+    }
+
+    // Odebírání prvků (Removing elements)
+
+    public T odeberAktualni() {
+        if (current == null) throw new NoSuchElementException("Aktuální prvek není nastaven.");
+        T data = current.data;
+        if (current == head) return odeberPrvni();
+        if (current == tail) return odeberPosledni();
+        current.prev.next = current.next;
+        current.next.prev = current.prev;
+        current = head;
+        size--;
+        return data;
+    }
+
+    public T odeberPrvni() {
+        if (head == null) throw new NoSuchElementException("Seznam je prázdný.");
         T data = head.data;
-        if (head == tail) { // Only one element
+        if (head == tail) {
             head = tail = null;
         } else {
             head = head.next;
             head.prev = tail;
             tail.next = head;
         }
+        current = head;
         size--;
         return data;
     }
 
-    public T removeLast() {
-        if (tail == null) throw new NoSuchElementException("List is empty.");
+    public T odeberPosledni() {
+        if (tail == null) throw new NoSuchElementException("Seznam je prázdný.");
         T data = tail.data;
-        if (head == tail) { // Only one element
-            return removeFirst();
+        if (head == tail) {
+            return odeberPrvni();
         } else {
             tail = tail.prev;
             tail.next = head;
             head.prev = tail;
-            size--;
+            current = head;
         }
+        size--;
         return data;
     }
 
-    public T getCurrent() {
-        if (current == null) throw new NoSuchElementException("No current element set.");
-        return current.data;
+    public T odeberNaslednika() {
+        zpristupniNaslednika();
+        return odeberAktualni();
     }
 
-    public void resetCurrent() {
-        current = head;
-    }
-
-    public void moveNext() {
-        if (current != null) current = current.next;
-    }
-
-    public void movePrev() {
-        if (current != null) current = current.prev;
-    }
-
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    public int size() {
-        return size;
+    public T odeberPredchudce() {
+        zpristupniPredchudce();
+        return odeberAktualni();
     }
 
     @Override
