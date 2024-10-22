@@ -154,7 +154,7 @@ public class ProgObyvatele {
             switch (choice) {
                 case 1:
                     //System.out.print("Enter the file path: ");
-                    String filePath = ("C:\\Users\\jirco\\Documents\\GitHub\\kral_BDATS-A_2024\\zadani\\kraje.csv");
+                    String filePath = ("C:\\Users\\jirco\\Documents\\GitHub\\kral_BDATS-A_2024\\zadani\\kraje.csv"); //TODO: make it dynamic
                     int imported = program.importData(filePath);
                     System.out.println(imported + " records imported.");
                     break;
@@ -170,7 +170,7 @@ public class ProgObyvatele {
                     break;
 
                 case 4:
-                    program.manualMode(scanner);  // Start manual mode
+                    program.manualMode(scanner);  // Start manual mode, showcasing data one by one based on position in the list
                     break;
 
                 case 5:
