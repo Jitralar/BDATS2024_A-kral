@@ -8,7 +8,7 @@ public class Kraj {
     private DoubleLinkedList<Obec> obceList = new DoubleLinkedList<>();
 
     public void addObec(Obec obec) {
-        obceList.addLast(obec);
+        obceList.vlozPosledni(obec);
     }
 
     public DoubleLinkedList<Obec> getObce() {
