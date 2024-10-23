@@ -1,9 +1,5 @@
 package upce.bdats;
 
-import upce.bdats.AbstrDoubleList;
-import upce.bdats.Kraj;
-import upce.bdats.Obec;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,7 +8,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Paths;
 
 public class ProgObyvatele extends JFrame {
@@ -48,15 +43,16 @@ public class ProgObyvatele extends JFrame {
         // Add action listeners for buttons
         loadButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) { //FIXME, make sure something is added
                 // Call the method to load data from kraje.csv
-                importData("kraje.csv"); 
+                importData("kraje.csv"); //new method, without chooser
+                //importDataPick(); //chooser
             }
         });
 
         displayButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) { //TODO: not working, fix this
                 // Display all municipalities
                 displayMunicipalities();
             }
@@ -101,7 +97,7 @@ public class ProgObyvatele extends JFrame {
     }
 
     // Stub methods for functionality to be implemented
-    private void importData() {
+    private void importDataPick() {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -137,10 +133,20 @@ public class ProgObyvatele extends JFrame {
         }
     }
 
-    private void displayMunicipalities() {
+    private void displayMunicipalities() { //TODO: implement this method
         displayArea.append("Zobrazování všech obcí...\n");
         // Implement logic to display all municipalities
+
+        for (Kraj kraj : krajeList) {
+            displayArea.append("Kraj: " + kraj.getNazev() + "\n");
+            for (Obec obec : kraj.getObceList()) {
+                displayArea.append(obec.toString() + "\n");
+            }
+        }
+
+
     }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -152,8 +158,10 @@ public class ProgObyvatele extends JFrame {
 
     private AbstrDoubleList<Kraj> krajeList = new AbstrDoubleList<>();
 
+
     private void importData(String fileName) {
         // Assuming the file is located in a folder named 'data' inside your project directory
+        int recordCount = 0;  // Track how many records are inserted
         String folderPath = "zadani"; // Change this to your specific folder
         String filePath = Paths.get(folderPath, fileName).toString();
 
@@ -183,13 +191,16 @@ public class ProgObyvatele extends JFrame {
 
                     // Add the municipality to the appropriate region (Kraj)
                     kraj.getObceList().vlozPosledni(obec);
+                    recordCount++;  // Increment the count for each valid record
                 }
             }
-            displayArea.append("Data byla úspěšně načtena.\n");
+            displayArea.append("Data byla úspěšně načtena. Počet záznamů: " + recordCount + "\n");
+            displayMunicipalities();
         } catch (IOException e) {
             displayArea.append("Chyba při čtení souboru: " + e.getMessage() + "\n");
         }
     }
+
 
 
 
