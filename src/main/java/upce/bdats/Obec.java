@@ -13,8 +13,20 @@ public class Obec {
         this.women = women;
     }
 
+    public int getPocetMuzu() {
+        return men;
+    }
+
+    public int getPocetZen() {
+        return women;
+    }
+
     public int getTotalPopulation() {
         return men + women;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -28,5 +40,3 @@ public class Obec {
                 '}';
     }
 }
-
-

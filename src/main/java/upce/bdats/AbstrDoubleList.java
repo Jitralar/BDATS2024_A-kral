@@ -3,7 +3,9 @@ package upce.bdats;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class DoubleLinkedList<T> implements Iterable<T> {
+
+public class AbstrDoubleList<T> implements Iterable<T> {
+
     private Node<T> head = null;
     private Node<T> tail = null;
     private Node<T> current = null;
@@ -11,7 +13,8 @@ public class DoubleLinkedList<T> implements Iterable<T> {
 
     private static class Node<T> {
         T data;
-        Node<T> next, prev;
+        Node<T> next;
+        Node<T> prev;
 
         Node(T data) {
             this.data = data;
@@ -34,9 +37,13 @@ public class DoubleLinkedList<T> implements Iterable<T> {
         Node<T> newNode = new Node<>(data);
         if (head == null) {
             head = tail = newNode;
+            newNode.next = newNode;
+            newNode.prev = newNode;
         } else {
             newNode.next = head;
+            newNode.prev = tail;
             head.prev = newNode;
+            tail.next = newNode;
             head = newNode;
         }
         size++;
@@ -44,12 +51,14 @@ public class DoubleLinkedList<T> implements Iterable<T> {
 
     // Insert at the last position
     public void vlozPosledni(T data) {
-        if (tail == null) {
+        if (head == null) {
             vlozPrvni(data);
         } else {
             Node<T> newNode = new Node<>(data);
-            tail.next = newNode;
             newNode.prev = tail;
+            newNode.next = head;
+            tail.next = newNode;
+            head.prev = newNode;
             tail = newNode;
             size++;
         }
@@ -61,9 +70,11 @@ public class DoubleLinkedList<T> implements Iterable<T> {
         Node<T> newNode = new Node<>(data);
         newNode.next = current.next;
         newNode.prev = current;
-        if (current.next != null) current.next.prev = newNode;
+        current.next.prev = newNode;
         current.next = newNode;
-        if (current == tail) tail = newNode;
+        if (current == tail) {
+            tail = newNode;
+        }
         size++;
     }
 
@@ -73,9 +84,11 @@ public class DoubleLinkedList<T> implements Iterable<T> {
         Node<T> newNode = new Node<>(data);
         newNode.prev = current.prev;
         newNode.next = current;
-        if (current.prev != null) current.prev.next = newNode;
+        current.prev.next = newNode;
         current.prev = newNode;
-        if (current == head) head = newNode;
+        if (current == head) {
+            head = newNode;
+        }
         size++;
     }
 
@@ -118,27 +131,28 @@ public class DoubleLinkedList<T> implements Iterable<T> {
         if (current == null) throw new NoSuchElementException("No current element.");
         T data = current.data;
         if (current == head) {
-            return odeberPrvni();
+            odeberPrvni();
         } else if (current == tail) {
-            return odeberPosledni();
+            odeberPosledni();
         } else {
             current.prev.next = current.next;
             current.next.prev = current.prev;
-            current = head; // Reset to first after removal
+            current = head;
             size--;
-            return data;
         }
+        return data;
     }
 
     // Remove the first node
     public T odeberPrvni() {
         if (head == null) throw new NoSuchElementException("The list is empty.");
         T data = head.data;
-        if (head == tail) { // Single element case
+        if (head == tail) {
             head = tail = null;
         } else {
             head = head.next;
-            head.prev = null;
+            head.prev = tail;
+            tail.next = head;
         }
         current = head;
         size--;
@@ -149,11 +163,12 @@ public class DoubleLinkedList<T> implements Iterable<T> {
     public T odeberPosledni() {
         if (tail == null) throw new NoSuchElementException("The list is empty.");
         T data = tail.data;
-        if (head == tail) { // Single element case
+        if (head == tail) {
             return odeberPrvni();
         } else {
             tail = tail.prev;
-            tail.next = null;
+            tail.next = head;
+            head.prev = tail;
         }
         current = head;
         size--;
