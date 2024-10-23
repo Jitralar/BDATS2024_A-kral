@@ -12,6 +12,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Paths;
 
 public class ProgObyvatele extends JFrame {
 
@@ -48,8 +50,7 @@ public class ProgObyvatele extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Call the method to load data from kraje.csv
-                //String filePath = ("C:\\Users\\jirco\\Documents\\GitHub\\kral_BDATS-A_2024\\zadani\\kraje.csv");
-                importData("kraje.csv");
+                importData("kraje.csv"); 
             }
         });
 
@@ -151,10 +152,14 @@ public class ProgObyvatele extends JFrame {
 
     private AbstrDoubleList<Kraj> krajeList = new AbstrDoubleList<>();
 
-    private void importData(String file) {
-        displayArea.append("Načítám data z: " + file + "\n");
+    private void importData(String fileName) {
+        // Assuming the file is located in a folder named 'data' inside your project directory
+        String folderPath = "zadani"; // Change this to your specific folder
+        String filePath = Paths.get(folderPath, fileName).toString();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+        displayArea.append("Načítám data z: " + filePath + "\n");
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(";");
@@ -185,6 +190,8 @@ public class ProgObyvatele extends JFrame {
             displayArea.append("Chyba při čtení souboru: " + e.getMessage() + "\n");
         }
     }
+
+
 
     // Find a Kraj by its name
     private Kraj findKrajByName(String name) {
