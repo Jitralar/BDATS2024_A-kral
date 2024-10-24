@@ -97,7 +97,7 @@ public class ProgObyvatele extends JFrame {
     }
 
     // Stub methods for functionality to be implemented, OLD METHODS
-    private void importDataPick() {
+    /*private void importDataPick() {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -132,18 +132,103 @@ public class ProgObyvatele extends JFrame {
             }
         }
     }
-
-    private void displayMunicipalities() { //TODO: implement this method
+*/
+    private void displayMunicipalities() {
         displayArea.setText("");  // Clear the display area
-        displayArea.append("Zobrazování všech obcí...\n");
-        // Implement logic to display all municipalities
+        String selectedKraj = (String) krajComboBox.getSelectedItem();
 
-        for (Kraj kraj : krajeList) {
-            displayArea.append("\nKraj: " + kraj.getNazev() + "\n");
-            for (Obec obec : kraj.getObceList()) {
+        if (selectedKraj.equals("Vyberte Kraj")) {
+            // If no specific Kraj is selected, display all municipalities
+            displayArea.append("Zobrazování všech obcí...\n");
+            for (Kraj kraj : krajeList) {
+                displayArea.append("\nKraj: " + kraj.getNazev() + "\n");
+                for (Obec obec : kraj.getObceList()) {
+                    displayArea.append(obec.toString() + "\n");
+                }
+            }
+        } else {
+            // Manual handling for each region in Czechia
+            switchIDController(selectedKraj);
+        }
+    }
+
+    private void switchIDController(String selectedKraj){
+        switch (selectedKraj) {
+            case "Praha":
+                displayArea.append("Zobrazování obcí pro Prahu\n");
+                selectedKrajPrint(1);
+                break;
+            case "Středočeský":
+                displayArea.append("Zobrazování obcí pro Středočeský kraj\n");
+                selectedKrajPrint(12);
+                break;
+            case "Jihočeský":
+                displayArea.append("Zobrazování obcí pro Jihočeský kraj\n");
+                selectedKrajPrint(3);
+                break;
+            case "Plzeňský":
+                displayArea.append("Zobrazování obcí pro Plzeňský kraj\n");
+                selectedKrajPrint(11);
+                break;
+            case "Karlovarský":
+                displayArea.append("Zobrazování obcí pro Karlovarský kraj\n");
+                selectedKrajPrint(4);
+                break;
+            case "Ústecký":
+                displayArea.append("Zobrazování obcí pro Ústecký kraj\n");
+                selectedKrajPrint(13);
+                break;
+            case "Liberecký":
+                displayArea.append("Zobrazování obcí pro Liberecký kraj\n");
+                selectedKrajPrint(7);
+                break;
+            case "Královéhradecký":
+                displayArea.append("Zobrazování obcí pro Královéhradecký kraj\n");
+                selectedKrajPrint(6);
+                break;
+            case "Pardubický":
+                displayArea.append("Zobrazování obcí pro Pardubický kraj\n");
+                selectedKrajPrint(10);
+                break;
+            case "Vysočina":
+                displayArea.append("Zobrazování obcí pro kraj Vysočina \n");
+                selectedKrajPrint(5);
+                break;
+            case "Jihomoravský":
+                displayArea.append("Zobrazování obcí pro Jihomoravský kraj\n");
+                selectedKrajPrint(3);
+                break;
+            case "Olomoucký":
+                displayArea.append("Zobrazování obcí pro Olomoucký kraj\n");
+                selectedKrajPrint(9);
+                break;
+            case "Zlínský":
+                displayArea.append("Zobrazování obcí pro Zlínský kraj\n");
+                selectedKrajPrint(14);
+                break;
+            case "Moravskoslezský":
+                displayArea.append("Zobrazování obcí pro Moravskoslezský kraj\n");
+                selectedKrajPrint(8);
+
+                break;
+            default:
+                displayArea.append("Kraj nebyl nalezen.\n");
+                return;
+        }
+
+    }
+
+    private int selectedKrajPrint(int kraj){
+        // Now display the municipalities for the selected Kraj id
+        Kraj selectedKraj = findKrajById(kraj);
+        if (selectedKraj != null) {
+            for (Obec obec : selectedKraj.getObceList()) {
                 displayArea.append(obec.toString() + "\n");
             }
+        } else {
+            displayArea.append("Kraj nebyl nalezen.\n");
         }
+    return kraj;
 
 
     }
@@ -164,7 +249,7 @@ public class ProgObyvatele extends JFrame {
     private void importData(String fileName) {
         // Assuming the file is located in a folder named 'data' inside your project directory
         int recordCount = 0;  // Track how many records are inserted
-        String folderPath = "zadani"; // Change this to your specific folder
+        String folderPath = "zadani";  // Change this to your specific folder
         String filePath = Paths.get(folderPath, fileName).toString();
 
         displayArea.append("Načítám data z: " + filePath + "\n");
@@ -175,8 +260,8 @@ public class ProgObyvatele extends JFrame {
                 String[] fields = line.split(";");
                 if (fields.length == 7) {  // Expecting 7 fields in the CSV file
                     // Example fields: id_kraje;kraj;psc;nazev_obce;Počet mužů;Počet žen;celkem
-                    String idKraje = fields[0];  // Not used, but could be used for some purpose
-                    String krajName = fields[1];
+                    String idKraje = fields[0];
+                    String krajName = fields[1];  // Use this for findKrajByName
                     String psc = fields[2];
                     String obecName = fields[3];
                     int pocetMuzu = Integer.parseInt(fields[4]);
@@ -189,14 +274,16 @@ public class ProgObyvatele extends JFrame {
                     // Create a new municipality (Obec)
                     Obec obec = new Obec(psc, obecName, pocetMuzu, pocetZen);
 
-                    // Find the right Kraj in the list, or create it if it doesn't exist
-                    Kraj kraj = findKrajByName(krajName);
+                    // Find the right Kraj by its id
+                    Kraj kraj = findKrajById(Integer.parseInt(idKraje));
                     if (kraj == null) {
-                        kraj = new Kraj(krajName);
+                        // If the Kraj is not found, create a new one
+                        kraj = new Kraj(Integer.parseInt(idKraje), krajName);
                         krajeList.vlozPosledni(kraj);
                     }
 
-                    // Add the municipality to the appropriate region (Kraj)
+
+                    // Add the municipality to the appropriate Kraj
                     kraj.getObceList().vlozPosledni(obec);
                     recordCount++;  // Increment the count for each valid record
                 } else {
@@ -205,7 +292,8 @@ public class ProgObyvatele extends JFrame {
                 }
             }
             displayArea.append("Data byla úspěšně načtena. Počet záznamů: " + recordCount + "\n");
-            //displayMunicipalities();  // Display municipalities after import
+            // Optionally display municipalities after import
+            // displayMunicipalities();
         } catch (IOException e) {
             displayArea.append("Chyba při čtení souboru: " + e.getMessage() + "\n");
         }
@@ -219,6 +307,15 @@ public class ProgObyvatele extends JFrame {
     private Kraj findKrajByName(String name) {
         for (Kraj kraj : krajeList) {
             if (kraj.getNazev().equalsIgnoreCase(name)) {
+                return kraj;
+            }
+        }
+        return null;
+    }
+
+    private Kraj findKrajById(int id) {
+        for (Kraj kraj : krajeList) {
+            if (kraj.getId() == id) {
                 return kraj;
             }
         }
@@ -264,6 +361,7 @@ public class ProgObyvatele extends JFrame {
     private void addMunicipality() {
         // Check if a Kraj is selected
         String selectedKraj = (String) krajComboBox.getSelectedItem();
+        
         if (selectedKraj.equals("Vyberte Kraj")) {
             displayArea.append("Musíte vybrat kraj, do kterého chcete přidat obec.\n");
             return;
@@ -301,6 +399,7 @@ public class ProgObyvatele extends JFrame {
             displayArea.append("Neplatný formát čísel! Zadejte správné číselné hodnoty pro počty mužů a žen.\n");
         }
     }
+
 
     private void removeMunicipality() {
         // Check if a Kraj is selected
