@@ -1,8 +1,10 @@
 **SEMESTRÁLNÍ PRÁCE A**
 
-_Maximální možný bodový zisk: 4 body_
+_Maximální možný bodový zisk: 4 body_ 
 
 _KST/BDATS: Datové struktury, Univerzita Pardubice - Fakulta Elektrotechniky a Informatiky_
+
+- _získáno 3,5 bodu, nicméně primárně hodnocena architektura projektu._
 
 ____
 
