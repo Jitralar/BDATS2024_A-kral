@@ -96,7 +96,7 @@ public class ProgObyvatele extends JFrame {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    // Stub methods for functionality to be implemented
+    // Stub methods for functionality to be implemented, OLD METHODS
     private void importDataPick() {
         JFileChooser fileChooser = new JFileChooser();
         int result = fileChooser.showOpenDialog(this);
@@ -147,6 +147,7 @@ public class ProgObyvatele extends JFrame {
 
 
     }
+
 
 
     public static void main(String[] args) {
@@ -238,7 +239,7 @@ public class ProgObyvatele extends JFrame {
             }
         } else {
             // Calculate and display average for the selected region
-            Kraj kraj = findKrajByName(selectedKraj);
+            Kraj kraj = findKrajByName(selectedKraj.toString());
             if (kraj != null) {
                 float average = calculateAverage(kraj);
                 displayArea.append("Kraj: " + kraj.getNazev() + " - Průměrný počet obyvatel: " + average + "\n");
@@ -338,6 +339,50 @@ public class ProgObyvatele extends JFrame {
             displayArea.append("Kraj nebyl nalezen.\n");
         }
     }
+
+    private void addMunicipalityToFirst(Obec obec, Kraj kraj) {
+        kraj.getObceList().vlozPrvni(obec);
+    }
+
+    private void addMunicipalityToLast(Obec obec, Kraj kraj) {
+        kraj.getObceList().vlozPosledni(obec);
+    }
+
+    private void addMunicipalityAsSuccessor(Obec obec, Kraj kraj) {
+        kraj.getObceList().vlozNaslednika(obec);
+    }
+
+    private void addMunicipalityAsPredecessor(Obec obec, Kraj kraj) {
+        kraj.getObceList().vlozPredchudce(obec);
+    }
+
+    private void removeCurrentMunicipality(Kraj kraj) {
+        kraj.getObceList().odeberAktualni();
+    }
+
+    private void removeFirstMunicipality(Kraj kraj) {
+        kraj.getObceList().odeberPrvni();
+    }
+
+    private void removeLastMunicipality(Kraj kraj) {
+        kraj.getObceList().odeberPosledni();
+    }
+
+    private void removeNextMunicipality(Kraj kraj) {
+        kraj.getObceList().odeberNaslednika();
+    }
+
+    private void removePreviousMunicipality(Kraj kraj) {
+        kraj.getObceList().odeberPredchudce();
+    }
+
+    private void clearMunicipalityList(Kraj kraj) {
+        kraj.getObceList().zrus();
+        displayArea.append("Seznam obcí v kraji " + kraj.getNazev() + " byl zrušen.\n");
+    }
+
+
+
 
 
 
