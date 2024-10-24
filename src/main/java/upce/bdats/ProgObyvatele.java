@@ -134,11 +134,12 @@ public class ProgObyvatele extends JFrame {
     }
 
     private void displayMunicipalities() { //TODO: implement this method
+        displayArea.setText("");  // Clear the display area
         displayArea.append("Zobrazování všech obcí...\n");
         // Implement logic to display all municipalities
 
         for (Kraj kraj : krajeList) {
-            displayArea.append("Kraj: " + kraj.getNazev() + "\n");
+            displayArea.append("\nKraj: " + kraj.getNazev() + "\n");
             for (Obec obec : kraj.getObceList()) {
                 displayArea.append(obec.toString() + "\n");
             }
@@ -171,13 +172,18 @@ public class ProgObyvatele extends JFrame {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(";");
-                if (fields.length == 5) {
-                    // Example fields: PSC;Obec;PocetMuzu;PocetZen;Kraj
-                    String psc = fields[0];
-                    String obecName = fields[1];
-                    int pocetMuzu = Integer.parseInt(fields[2]);
-                    int pocetZen = Integer.parseInt(fields[3]);
-                    String krajName = fields[4];
+                if (fields.length == 7) {  // Expecting 7 fields in the CSV file
+                    // Example fields: id_kraje;kraj;psc;nazev_obce;Počet mužů;Počet žen;celkem
+                    String idKraje = fields[0];  // Not used, but could be used for some purpose
+                    String krajName = fields[1];
+                    String psc = fields[2];
+                    String obecName = fields[3];
+                    int pocetMuzu = Integer.parseInt(fields[4]);
+                    int pocetZen = Integer.parseInt(fields[5]);
+                    // Ignoring celkem (fields[6]) as it's just the sum of men and women
+
+                    // Debugging: Print the parsed data to see if it's correct
+                    //System.out.println("Parsed Record: Kraj=" + krajName + ", PSC=" + psc + ", Obec=" + obecName + ", Muži=" + pocetMuzu + ", Ženy=" + pocetZen);
 
                     // Create a new municipality (Obec)
                     Obec obec = new Obec(psc, obecName, pocetMuzu, pocetZen);
@@ -192,14 +198,18 @@ public class ProgObyvatele extends JFrame {
                     // Add the municipality to the appropriate region (Kraj)
                     kraj.getObceList().vlozPosledni(obec);
                     recordCount++;  // Increment the count for each valid record
+                } else {
+                    // Debugging: Print a message if the line is not properly split
+                    System.out.println("Skipping invalid line: " + line);
                 }
             }
             displayArea.append("Data byla úspěšně načtena. Počet záznamů: " + recordCount + "\n");
-            displayMunicipalities();
+            //displayMunicipalities();  // Display municipalities after import
         } catch (IOException e) {
             displayArea.append("Chyba při čtení souboru: " + e.getMessage() + "\n");
         }
     }
+
 
 
 
