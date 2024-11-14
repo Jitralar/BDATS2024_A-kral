@@ -4,15 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
 import java.util.Iterator;
 
 public class ProgAgendaKraj extends JFrame {
     private AgendaKraj agendaKraj;
-    private JTextField searchField, pscField, nameField, menField, womenField;
+    private JTextField searchField, nameField, postalCodeField, menField, womenField;
     private JTextArea resultDisplay;
-    private JTable obecTable;
     private Iterator<Obec> iterator;
+    private Obec currentObec;
 
     public ProgAgendaKraj() {
         agendaKraj = new AgendaKraj();
@@ -22,7 +21,7 @@ public class ProgAgendaKraj extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Search Panel
-        JPanel searchPanel = new JPanel();
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchField = new JTextField(15);
         JButton searchButton = new JButton("Search");
         searchButton.addActionListener(this::handleSearch);
@@ -31,19 +30,19 @@ public class ProgAgendaKraj extends JFrame {
         searchPanel.add(searchButton);
 
         // Input Panel for Municipality Data
-        JPanel inputPanel = new JPanel();
-        pscField = new JTextField(5);
+        JPanel inputPanel = new JPanel(new GridLayout(3, 4, 5, 5));
         nameField = new JTextField(10);
+        postalCodeField = new JTextField(6);
         menField = new JTextField(5);
         womenField = new JTextField(5);
         JButton addButton = new JButton("Add Municipality");
         addButton.addActionListener(this::handleAdd);
         JButton deleteButton = new JButton("Delete Municipality");
         deleteButton.addActionListener(this::handleDelete);
-        inputPanel.add(new JLabel("PSC: "));
-        inputPanel.add(pscField);
         inputPanel.add(new JLabel("Name: "));
         inputPanel.add(nameField);
+        inputPanel.add(new JLabel("Postal Code: "));
+        inputPanel.add(postalCodeField);
         inputPanel.add(new JLabel("Men: "));
         inputPanel.add(menField);
         inputPanel.add(new JLabel("Women: "));
@@ -51,8 +50,8 @@ public class ProgAgendaKraj extends JFrame {
         inputPanel.add(addButton);
         inputPanel.add(deleteButton);
 
-        // Data Generation and Tree Building Panel
-        JPanel actionPanel = new JPanel();
+        // Action Panel
+        JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton generateButton = new JButton("Generate Data");
         generateButton.addActionListener(this::handleGenerate);
         JButton buildButton = new JButton("Build Balanced Tree");
@@ -60,30 +59,27 @@ public class ProgAgendaKraj extends JFrame {
         actionPanel.add(generateButton);
         actionPanel.add(buildButton);
 
-        // Display and Export Panel
-        resultDisplay = new JTextArea(8, 40);
-        resultDisplay.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(resultDisplay);
-        JButton saveButton = new JButton("Save to File");
-        saveButton.addActionListener(this::handleSaveToFile);
-        JButton loadButton = new JButton("Load from File");
-        loadButton.addActionListener(this::handleLoadFromFile);
-
         // Iterator Control Panel
-        JPanel iteratorPanel = new JPanel();
+        JPanel iteratorPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JButton previousButton = new JButton("Previous Municipality");
+        previousButton.addActionListener(this::handlePrevious);
         JButton nextButton = new JButton("Next Municipality");
         nextButton.addActionListener(this::handleNext);
+        iteratorPanel.add(previousButton);
         iteratorPanel.add(nextButton);
+
+        // Result Display Area
+        resultDisplay = new JTextArea(10, 50);
+        resultDisplay.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(resultDisplay);
 
         // Layout
         setLayout(new BorderLayout());
         add(searchPanel, BorderLayout.NORTH);
         add(inputPanel, BorderLayout.CENTER);
         add(actionPanel, BorderLayout.SOUTH);
-        add(scrollPane, BorderLayout.WEST);
         add(iteratorPanel, BorderLayout.EAST);
-        add(saveButton, BorderLayout.PAGE_END);
-        add(loadButton, BorderLayout.PAGE_START);
+        add(scrollPane, BorderLayout.WEST);
     }
 
     // Button Actions
@@ -99,11 +95,11 @@ public class ProgAgendaKraj extends JFrame {
     }
 
     private void handleAdd(ActionEvent event) {
-        String psc = pscField.getText();
         String name = nameField.getText();
+        String postalCode = postalCodeField.getText();
         int men = Integer.parseInt(menField.getText());
         int women = Integer.parseInt(womenField.getText());
-        Obec obec = new Obec(psc,name, men, women);
+        Obec obec = new Obec(name, postalCode, men, women);
         agendaKraj.vloz(obec);
         resultDisplay.setText("Added: " + obec);
     }
@@ -129,21 +125,36 @@ public class ProgAgendaKraj extends JFrame {
     }
 
     private void handleNext(ActionEvent event) {
-        if (iterator == null) iterator = agendaKraj.vytvorIterator();
+        if (iterator == null) {
+            iterator = agendaKraj.vytvorIterator();
+        }
         if (iterator.hasNext()) {
-            Obec next = iterator.next();
-            resultDisplay.setText(next.toString());
+            currentObec = iterator.next();
+            resultDisplay.setText(currentObec.toString());
         } else {
             resultDisplay.setText("End of municipalities.");
         }
     }
 
-    private void handleSaveToFile(ActionEvent event) {
-        // Serialize data to a file (example code)
-    }
-
-    private void handleLoadFromFile(ActionEvent event) {
-        // Load data from a file (example code)
+    private void handlePrevious(ActionEvent event) {
+        if (iterator == null || currentObec == null) {
+            resultDisplay.setText("No previous municipality available.");
+            return;
+        }
+        // Simple logic to reset and re-iterate for the previous item
+        iterator = agendaKraj.vytvorIterator();
+        Obec previousObec = null;
+        while (iterator.hasNext()) {
+            Obec obec = iterator.next();
+            if (obec.equals(currentObec)) break;
+            previousObec = obec;
+        }
+        if (previousObec != null) {
+            currentObec = previousObec;
+            resultDisplay.setText(previousObec.toString());
+        } else {
+            resultDisplay.setText("No previous municipality available.");
+        }
     }
 
     public static void main(String[] args) {
