@@ -64,7 +64,7 @@ public class ABSTRTABLE<K extends Comparable<K>, V> {
         int cmp = key.compareTo(node.key);
         if (cmp < 0) node.left = vlozNode(node.left, key, value);
         else if (cmp > 0) node.right = vlozNode(node.right, key, value);
-        else node.value = value; // Update value if key already exists
+        else node.value = value; // FIXME: Update value if key already exists
         return node;
     }
 
