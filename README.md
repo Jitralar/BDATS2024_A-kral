@@ -115,6 +115,7 @@ z generátoru, výstupy z programu nechť je možné zobrazit na obrazovce a ulo
 
 ___
 **E)** 
+
 V rámci **rozšíření semestrální práce A** vybudujte vyhledávací strukturu, která bude
 obsahovat obce všech krajů. Vyhledávání bude realizováno podle klíče, název obce.
 
