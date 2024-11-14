@@ -1,10 +1,12 @@
-**SEMESTRÁLNÍ PRÁCE A**
+**SEMESTRÁLNÍ PRÁCE A + B**
 
-_Maximální možný bodový zisk: 4 body_ 
+_Maximální možný bodový zisk za A: 4 body_ 
+
+_Maximální možný bodový zisk za B: 4 body_ 
 
 _KST/BDATS: Datové struktury, Univerzita Pardubice - Fakulta Elektrotechniky a Informatiky_
 
-- _získáno 3,5 bodu, nicméně primárně hodnocena architektura projektu._
+- _A: získáno 3,5 bodu, nicméně primárně hodnocena architektura projektu._
 
 ____
 
@@ -111,5 +113,49 @@ umožňuje obsluhu programu a volat požadované operace.
 Zmíněný program, nechť umožňuje zadávání vstupních dat z klávesnice, ze souboru a
 z generátoru, výstupy z programu nechť je možné zobrazit na obrazovce a uložit do souboru.
 
+___
+**E)** 
+V rámci **rozšíření semestrální práce A** vybudujte vyhledávací strukturu, která bude
+obsahovat obce všech krajů. Vyhledávání bude realizováno podle klíče, název obce.
+
+**F)**
+
+Použité datové struktury:
+Abstraktní datová struktura umožňující vyhledávání dle klíče je realizována jako binární
+vyhledávací strom (BVS) v dynamické paměti (tabulka na binárním stromu).
+Komponenta ABSTRTABLE pracuje s generickým prvkem
+ - K extends Comparable<K>, V (K-key,V-value) a implementuje rozhraní:
+ - void zrus() zrušení celé tabulky
+ - boolean jePrazdny() test prázdnosti tabulky
+ - V najdi(K key) vyhledá prvek dle klíče
+ - void vloz(K key, V value) vloží prvek do tabulky
+ - V odeber(K key) odebere prvek dle klíče z tabulky
+ - Iterator vytvorIterator (eTypProhl typ)vytvoří iterátor, který umožňuje
+ - procházení stromu do šířky/hloubky (in-order)
 
 
+Iterátor využívá ADS zásobník/fronta (ABSTRLIFO/ ABSTRFIFO) postavenou nad ADS
+ze semestrální práce A (jako nová samostatná třída)
+ - void zrus() zrušení celé fronty/zásobníku
+ - boolean jePrazdny() test prázdnosti
+ - void vloz(T data) vloží prvek do zásobníku/fronty
+ - T odeber() odebere prvek ze zásobníku/fronty
+ - Iterator vytvorIterator vrací iterátor zásobníku/fronty
+
+**G)**
+
+Pro ověření funkčnosti implementovaných ADS vytvořte modul AgendaKraj. Tento
+modul implementuje rozhraní odpovídající následující operacím:
+ - Najdi/Vloz/Odeber() vyhledání/vložení/odebrání obce
+ - Vybuduj() vybuduje BVS tak, aby byl strom vyvážený (na
+ - základně znalosti dimenze prvků a jejich klíčů)
+ - VytvorIterátor() vrací iterátor tabulky
+ - Generuj umožnuje generovat jednotlivé obce
+
+**H)**
+
+Pro obsluhu aplikace vytvořte uživatelské formulářové rozhraní ProgAgendaKraj, která
+umožňuje obsluhu programu a volat operace agendy kraje.
+
+ProgAgendaKraj nechť dále umožňuje zadávání vstupních dat z klávesnice, ze souboru a
+z generátoru, výstupy z programu nechť je možné zobrazit na obrazovce a uložit do souboru.
