@@ -114,14 +114,13 @@ Zmíněný program, nechť umožňuje zadávání vstupních dat z klávesnice, 
 z generátoru, výstupy z programu nechť je možné zobrazit na obrazovce a uložit do souboru.
 
 ___
-**E)** 
+**E)** Motivační příklad:
 
 V rámci **rozšíření semestrální práce A** vybudujte vyhledávací strukturu, která bude
 obsahovat obce všech krajů. Vyhledávání bude realizováno podle klíče, název obce.
 
-**F)**
+**F)** Použité datové struktury:
 
-Použité datové struktury:
 Abstraktní datová struktura umožňující vyhledávání dle klíče je realizována jako binární
 vyhledávací strom (BVS) v dynamické paměti (tabulka na binárním stromu).
 Komponenta ABSTRTABLE pracuje s generickým prvkem
@@ -143,7 +142,7 @@ ze semestrální práce A (jako nová samostatná třída)
  - T odeber() odebere prvek ze zásobníku/fronty
  - Iterator vytvorIterator vrací iterátor zásobníku/fronty
 
-**G)**
+**G)** Nové rozhraní pro ověření implementace:
 
 Pro ověření funkčnosti implementovaných ADS vytvořte modul AgendaKraj. Tento
 modul implementuje rozhraní odpovídající následující operacím:
@@ -153,7 +152,7 @@ modul implementuje rozhraní odpovídající následující operacím:
  - VytvorIterátor() vrací iterátor tabulky
  - Generuj umožnuje generovat jednotlivé obce
 
-**H)**
+**H)** Rozšíření GUI:
 
 Pro obsluhu aplikace vytvořte uživatelské formulářové rozhraní ProgAgendaKraj, která
 umožňuje obsluhu programu a volat operace agendy kraje.
