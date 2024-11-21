@@ -1,6 +1,8 @@
 package upce.bdats;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * A generic Binary Search Tree (BST) implementation
@@ -14,10 +16,13 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
         V value;     // The value associated with the key
         Node left;   // Left child
         Node right;  // Right child
+        List<Obec> obce; // List of Obec (municipalities) under this Kraj
+
 
         Node(K key, V value) {
             this.key = key;
             this.value = value;
+            this.obce = new ArrayList<>();
         }
     }
 
@@ -72,6 +77,15 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
         } else {                                     // Key is larger, search right
             return findRecursive(node.right, key);
         }
+    }
+
+    /**
+     * Find a node by its key
+     * @param key The key to search for
+     * @return The node with the key, or null if not found
+     */
+    public Node findNodeByKey(K key) {
+        return findRecursive(root, key);
     }
 
     /**

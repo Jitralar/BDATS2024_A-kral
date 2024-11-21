@@ -11,6 +11,15 @@ public class AbstrDoubleList<T> implements Iterable<T> {
     private Node<T> current = null;
     private int size = 0;
 
+    public T get(int i) {
+        if (i < 0 || i >= size) throw new IndexOutOfBoundsException("Index out of bounds.");
+        Node<T> node = head;
+        for (int j = 0; j < i; j++) {
+            node = node.next;
+        }
+        return node.data;
+    }
+
     private static class Node<T> {
         T data;
         Node<T> next;
