@@ -1,15 +1,21 @@
-**SEMESTRÁLNÍ PRÁCE A + B**
+**SEMESTRÁLNÍ PRÁCE A + B + C**
 
-_Maximální možný bodový zisk za A: 4 body_ 
+- _Maximální možný bodový zisk za A: 4 body_ 
+- _Maximální možný bodový zisk za B: 4 body_ 
+- _Maximální možný bodový zisk za C: 3 body_ 
 
-_Maximální možný bodový zisk za B: 4 body_ 
 
-_KST/BDATS: Datové struktury, Univerzita Pardubice - Fakulta Elektrotechniky a Informatiky_
+**_KST/BDATS: Datové struktury, Univerzita Pardubice - Fakulta Elektrotechniky a Informatiky_**
+
+**Made by: Jiří Král - st67053@upce.cz [ZS-2024]**
 
 - _A: získáno 3,5 bodu, nicméně primárně hodnocena architektura projektu._
+- _B: získáno 3,5 bodu, hodnocen strom a základní práce s ním._
+- _C: **Work in progress**, nicméně ideální postup by byl získat více jak 2 body = zápočet již před semestrální prací D._
+
 
 ____
-
+### Semestrální práce A
 **A)** Motivační příklad:
 
 V rámci personální agendy jsou uchovávány statistické informace o počtu obyvatel
@@ -85,6 +91,7 @@ v odpovídajícím kraji
 
 • float zjistiPrumer(enumKraj Kraj) – zjistí průměrný počet obyvatel
 v kraji, pokud je hodnota kraje rovna null, pak je průměr spočítán pro všechny kraje.
+
 • Obec[]zobrazObce(enumKraj Kraj) – pomocí iterátoru provede výpis obcí
 v daném kraji, pokud je hodnota kraje rovna null, pak jsou vypsány všechny kraje.
 Alternativně může metoda vracet IAbstrDoubleList
@@ -114,6 +121,8 @@ Zmíněný program, nechť umožňuje zadávání vstupních dat z klávesnice, 
 z generátoru, výstupy z programu nechť je možné zobrazit na obrazovce a uložit do souboru.
 
 ___
+### Semestrální práce B
+
 **E)** Motivační příklad:
 
 V rámci **rozšíření semestrální práce A** vybudujte vyhledávací strukturu, která bude
@@ -159,3 +168,52 @@ umožňuje obsluhu programu a volat operace agendy kraje.
 
 ProgAgendaKraj nechť dále umožňuje zadávání vstupních dat z klávesnice, ze souboru a
 z generátoru, výstupy z programu nechť je možné zobrazit na obrazovce a uložit do souboru.
+
+___
+### Semestrální práce C
+
+**CH)** Motivační příklad:
+
+Rozšiřte semestrální práci A/B o prioritní frontu. Priorita bude definována (i) počtem
+obyvatel nebo (ii) názvem obce a bude ji možné měnit za běhu aplikace.
+
+**I)** Použité datové struktury:
+
+Abstraktní datová struktura umožňující vyhledávání dle klíče je realizována jako binární
+vyhledávací strom (BVS) v dynamické paměti (tabulka na binárním stromu).
+
+Komponenta ABSTRTABLE pracuje s generickým prvkem
+K extends Comparable<K>, V (K-key,V-value) a implementuje rozhraní:
+
+ - void zrus() zrušení celé tabulky
+ - boolean jePrazdny() test prázdnosti tabulky
+ - V najdi(K key) vyhledá prvek dle klíče
+ - void vloz(K key, V value) vloží prvek do tabulky
+ - V odeber(K key) odebere prvek dle klíče z tabulky
+ - Iterator vytvorIterator (eTypProhl typ)vytvoří iterátor, který umožňuje procházení stromu do šířky/hloubky (in-order)
+
+
+Iterátor využívá ADS zásobník/fronta (ABSTRLIFO/ ABSTRFIFO) postavenou nad ADS ze semestrální práce A (jako nová samostatná třída)
+ - void zrus() zrušení celé fronty/zásobníku
+ - boolean jePrazdny() test prázdnosti
+ - void vloz(T data) vloží prvek do zásobníku/fronty
+ - T odeber() odebere prvek ze zásobníku/fronty
+ - Iterator vytvorIterator vrací iterátor zásobníku/fronty
+
+**J)** Ověření funkčnosti:
+
+Pro ověření funkčnosti implementovaných ADS vytvořte modul AgendaKraj. Tento
+modul implementuje rozhraní odpovídající následující operacím:
+
+ - Najdi/Vloz/Odeber() vyhledání/vložení/odebrání obce
+ - Vybuduj() vybuduje BVS tak, aby byl strom vyvážený (na základně znalosti dimenze prvků a jejich klíčů)
+ - VytvorIterátor() vrací iterátor tabulky
+ - Generuj umožnuje generovat jednotlivé obce
+
+**K)** GUI:
+
+Pro obsluhu aplikace vytvořte uživatelské formulářové rozhraní ProgAgendaKraj, která
+umožňuje obsluhu programu a volat operace agendy kraje.
+
+ProgAgendaKraj nechť dále umožňuje zadávání vstupních dat z klávesnice, ze souboru a
+z generátoru, výstupy z programu nechť je možné zobrazit na _obrazovce_ a uložit do _souboru_.
