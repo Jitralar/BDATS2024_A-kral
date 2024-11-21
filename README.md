@@ -1,4 +1,4 @@
-**SEMESTRÁLNÍ PRÁCE A + B + C**
+## SEMESTRÁLNÍ PRÁCE A + B + C
 
 - _Maximální možný bodový zisk za A: 4 body_ 
 - _Maximální možný bodový zisk za B: 4 body_ 
