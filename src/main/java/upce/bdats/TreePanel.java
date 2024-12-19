@@ -1,115 +1,90 @@
+
 package upce.bdats;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TreePanel extends JPanel {
     private final BinarySearchTree<Integer, Kraj> tree;
-    private static final int NODE_RADIUS_KRAJ = 20; // Radius for Kraj nodes
-    private static final int NODE_RADIUS_OBEC = 10; // Radius for Obec nodes
-    private static final int MAX_OBEC_DISPLAY = 5; // Max Obec nodes displayed per Kraj
-    private int horizontalSpacing = 50;
-    private int verticalSpacing = 50;
+    private static final int NODE_RADIUS = 20;
+    private static final int HORIZONTAL_SPACING = 50;
+    private static final int VERTICAL_SPACING = 70;
 
-    private final Map<Rectangle, String> nodeTextMap = new HashMap<>();
-    private String hoveredText = null;
+    private final Map<Integer, Color> regionColors; // Map of region IDs to colors
 
     public TreePanel(BinarySearchTree<Integer, Kraj> tree) {
         this.tree = tree;
+        this.regionColors = initializeRegionColors();
         setBackground(Color.WHITE);
+    }
 
-        addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                Point mousePoint = e.getPoint();
-                hoveredText = null;
-                for (Map.Entry<Rectangle, String> entry : nodeTextMap.entrySet()) {
-                    if (entry.getKey().contains(mousePoint)) {
-                        hoveredText = entry.getValue();
-                        break;
-                    }
-                }
-                repaint();
-            }
-        });
+    private Map<Integer, Color> initializeRegionColors() {
+        Map<Integer, Color> colors = new HashMap<>();
+        colors.put(1, new Color(211, 211, 211)); // Example region colors
+        colors.put(2, new Color(144, 238, 144));
+        colors.put(3, new Color(255, 239, 213));
+        // Add more region colors as needed
+        return colors;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        nodeTextMap.clear();
-
-        horizontalSpacing = Math.max(50, getWidth() / (getMaxTreeWidth(tree.getRoot()) + 1));
-        verticalSpacing = Math.max(50, getHeight() / (getTreeHeight(tree.getRoot()) + 2));
-
         if (tree.getRoot() != null) {
-            drawTree(g, tree.getRoot(), getWidth() / 2, verticalSpacing, getWidth() / 4);
+            drawTree(g, tree.getRoot(), getWidth() / 2, 50, getWidth() / 4);
         }
-
-        if (hoveredText != null) {
-            g.setColor(Color.BLACK);
-            g.drawString(hoveredText, 10, getHeight() - 20);
-        }
+        drawLegend(g);
     }
 
     private void drawTree(Graphics g, BinarySearchTree<Integer, Kraj>.Node node, int x, int y, int offsetX) {
         if (node == null) return;
 
+        // Draw left child connection
         if (node.left != null) {
-            g.drawLine(x, y, x - offsetX, y + verticalSpacing);
-            drawTree(g, node.left, x - offsetX, y + verticalSpacing, offsetX / 2);
+            g.drawLine(x, y, x - offsetX, y + VERTICAL_SPACING);
+            drawTree(g, node.left, x - offsetX, y + VERTICAL_SPACING, offsetX / 2);
         }
 
+        // Draw right child connection
         if (node.right != null) {
-            g.drawLine(x, y, x + offsetX, y + verticalSpacing);
-            drawTree(g, node.right, x + offsetX, y + verticalSpacing, offsetX / 2);
+            g.drawLine(x, y, x + offsetX, y + VERTICAL_SPACING);
+            drawTree(g, node.right, x + offsetX, y + VERTICAL_SPACING, offsetX / 2);
         }
 
-        g.setColor(Color.ORANGE);
-        g.fillOval(x - NODE_RADIUS_KRAJ, y - NODE_RADIUS_KRAJ, NODE_RADIUS_KRAJ * 2, NODE_RADIUS_KRAJ * 2);
+        // Draw node
+        Color color = regionColors.getOrDefault(node.key, Color.ORANGE);
+        g.setColor(color);
+        g.fillOval(x - NODE_RADIUS, y - NODE_RADIUS, NODE_RADIUS * 2, NODE_RADIUS * 2);
         g.setColor(Color.BLACK);
-        g.drawOval(x - NODE_RADIUS_KRAJ, y - NODE_RADIUS_KRAJ, NODE_RADIUS_KRAJ * 2, NODE_RADIUS_KRAJ * 2);
-        String text = node.key + ": " + node.value.getNazev();
-        g.drawString(text, x - g.getFontMetrics().stringWidth(text) / 2, y - NODE_RADIUS_KRAJ - 5);
+        g.drawOval(x - NODE_RADIUS, y - NODE_RADIUS, NODE_RADIUS * 2, NODE_RADIUS * 2);
 
-        int leafY = y + verticalSpacing * 2;
-        int leafXOffset = Math.max(30, offsetX / Math.max(1, node.value.getObceList().size()));
+        // Draw text (ID and name)
+        String text = node.key + ": " + ((Kraj) node.value).getNazev();
+        g.drawString(text, x - g.getFontMetrics().stringWidth(text) / 2, y + 5);
+    }
 
-        int numObce = Math.min(node.value.getObceList().size(), MAX_OBEC_DISPLAY);
-        int startX = x - (numObce - 1) * leafXOffset / 2;
+    private void drawLegend(Graphics g) {
+        int legendX = 10;
+        int legendY = 10;
+        int legendWidth = 20;
+        int legendHeight = 20;
+        int yOffset = 0;
 
-        for (int i = 0; i < numObce; i++) {
-            Obec obec = node.value.getObceList().get(i);
-            int leafX = startX + i * leafXOffset;
+        g.setColor(Color.BLACK);
+        g.drawString("Legenda:", legendX, legendY + yOffset);
+        yOffset += 20;
 
-            g.drawLine(x, y + NODE_RADIUS_KRAJ, leafX, leafY - NODE_RADIUS_OBEC);
-
-            g.setColor(Color.GREEN);
-            g.fillOval(leafX - NODE_RADIUS_OBEC, leafY - NODE_RADIUS_OBEC, NODE_RADIUS_OBEC * 2, NODE_RADIUS_OBEC * 2);
+        for (Map.Entry<Integer, Color> entry : regionColors.entrySet()) {
+            g.setColor(entry.getValue());
+            g.fillRect(legendX, legendY + yOffset - 10, legendWidth, legendHeight - 10);
             g.setColor(Color.BLACK);
-            g.drawOval(leafX - NODE_RADIUS_OBEC, leafY - NODE_RADIUS_OBEC, NODE_RADIUS_OBEC * 2, NODE_RADIUS_OBEC * 2);
+            g.drawRect(legendX, legendY + yOffset - 10, legendWidth, legendHeight - 10);
 
-            Rectangle rect = new Rectangle(leafX - NODE_RADIUS_OBEC, leafY - NODE_RADIUS_OBEC, NODE_RADIUS_OBEC * 2, NODE_RADIUS_OBEC * 2);
-            nodeTextMap.put(rect, obec.getName() + " (" + obec.getTotalPopulation() + ")");
+            String regionName = "Region " + entry.getKey(); // Placeholder region names
+            g.drawString(regionName, legendX + legendWidth + 10, legendY + yOffset);
+            yOffset += 20;
         }
-
-        if (node.value.getObceList().size() > MAX_OBEC_DISPLAY) {
-            String moreText = "... (" + (node.value.getObceList().size() - MAX_OBEC_DISPLAY) + " more)";
-            g.drawString(moreText, x - g.getFontMetrics().stringWidth(moreText) / 2, leafY + 20);
-        }
-    }
-
-    private int getTreeHeight(BinarySearchTree<Integer, Kraj>.Node node) {
-        if (node == null) return 0;
-        return 1 + Math.max(getTreeHeight(node.left), getTreeHeight(node.right));
-    }
-
-    private int getMaxTreeWidth(BinarySearchTree<Integer, Kraj>.Node node) {
-        if (node == null) return 0;
-        return 1 + getMaxTreeWidth(node.left) + getMaxTreeWidth(node.right);
     }
 }
